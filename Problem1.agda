@@ -118,12 +118,7 @@ module Lemmas where
 
   -- if i divides both m and n then it divides their difference
   ∣m∣n⇒∣m∸n : ∀ {i m n} → i ∣ m → i ∣ n → i ∣ m ∸ n
-  ∣m∣n⇒∣m∸n {i} {m} {n} (divides quotient₁ equality) (divides quotient₂ equality₁) = divides (quotient₁ ∸ quotient₂) (begin
-    m ∸ n                         ≡⟨ cong₂ _∸_ equality equality₁ ⟩
-    quotient₁ * i ∸ quotient₂ * i ≡˘⟨ *-distribʳ-∸ i quotient₁ quotient₂ ⟩
-    (quotient₁ ∸ quotient₂) * i   ∎)
-    where
-      open ≡-Reasoning
+  ∣m∣n⇒∣m∸n (divides p refl) (divides q refl) = divides (p ∸ q) (sym (*-distribʳ-∸ _ p q))
 
   lemma : {x d : ℕ} → suc d ∣ suc x → suc x / suc d ≡ suc (x / suc d)
   lemma {x} {zero} p = begin
