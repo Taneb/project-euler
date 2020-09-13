@@ -56,14 +56,14 @@ module Lemmas where
   triangle′ n = ⌊ n * suc n /2⌋
 
   -- Identity to do with adding to half something
-  +-⌊n/⌋ : ∀ m n → m + ⌊ n /2⌋ ≡ ⌊ 2 * m + n /2⌋
-  +-⌊n/⌋ zero n = refl
-  +-⌊n/⌋ (suc m) n = begin
-    suc (m + ⌊ n /2⌋)                  ≡⟨ cong suc (+-⌊n/⌋ m n) ⟩
-    suc ⌊ 2 * m + n /2⌋                ≡⟨ cong (λ x → suc ⌊ m + x + n /2⌋) (+-identityʳ m) ⟩
-    ⌊ suc (suc m + m) + n /2⌋          ≡˘⟨ cong (λ x → ⌊ suc x + n /2⌋) (+-suc m m) ⟩
-    ⌊ suc (m + suc m + n) /2⌋          ≡˘⟨ cong (λ x → ⌊ suc (m + suc x + n) /2⌋) (+-identityʳ m) ⟩
-    ⌊ suc (m + suc (m + zero) + n) /2⌋ ∎
+  +-⌊n/2⌋ : ∀ m n → m + ⌊ n /2⌋ ≡ ⌊ 2 * m + n /2⌋
+  +-⌊n/2⌋ zero n = refl
+  +-⌊n/2⌋ (suc m) n = begin
+    suc (m + ⌊ n /2⌋)         ≡⟨ cong suc (+-⌊n/2⌋ m n) ⟩
+    suc ⌊ 2 * m + n /2⌋       ≡⟨ cong (λ x → suc ⌊ m + x + n /2⌋) (+-identityʳ m) ⟩
+    ⌊ suc (suc m + m) + n /2⌋ ≡˘⟨ cong (λ x → ⌊ suc x + n /2⌋) (+-suc m m) ⟩
+    ⌊ suc (m + suc m + n) /2⌋ ≡˘⟨ cong (λ x → ⌊ suc (m + suc x + n) /2⌋) (+-identityʳ m) ⟩
+    ⌊ 2 * suc m + n /2⌋       ∎
     where
       open ≡-Reasoning
 
@@ -71,13 +71,10 @@ module Lemmas where
   triangle≗triangle′ : triangle ≗ triangle′
   triangle≗triangle′ zero = refl
   triangle≗triangle′ (suc x) = begin
-    triangle (suc x)            ≡⟨⟩
-    suc x + triangle x          ≡⟨ cong (suc x +_) (triangle≗triangle′ x) ⟩
-    suc x + triangle′ x         ≡⟨⟩
-    suc x + ⌊ x * suc x /2⌋     ≡⟨ +-⌊n/⌋ (suc x) (x * suc x) ⟩
+    triangle (suc x)            ≡⟨ cong (suc x +_) (triangle≗triangle′ x) ⟩
+    suc x + ⌊ x * suc x /2⌋     ≡⟨ +-⌊n/2⌋ (suc x) (x * suc x) ⟩
     ⌊ 2 * suc x + x * suc x /2⌋ ≡˘⟨ cong ⌊_/2⌋ (*-distribʳ-+ (suc x) 2 x) ⟩
     ⌊ (2 + x) * suc x /2⌋       ≡⟨ cong ⌊_/2⌋ (*-comm (2 + x) _) ⟩
-    ⌊ suc x * suc (suc x) /2⌋   ≡⟨⟩
     triangle′ (suc x)           ∎
     where
       open ≡-Reasoning
